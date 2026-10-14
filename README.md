@@ -141,19 +141,3 @@ CoachFlow/
 ├── charts.py
 ├── validation.py
 └── README.md
-
-
-### One important thing
-
-I deliberately **didn't put `database.db` in the README as something users should commit**. Your `.gitignore` should keep it out of GitHub.
-
-After you save `README.md`, run:
-
-```powershell
-git add README.md
-git commit -m "Add professional project README"
-git push
-
-###Author
-Alex Norbury
-Bsc Computer Science
