@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Appointments - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+
+    <style>
+
+        .calendar-page {
+            padding-bottom: 50px;
+        }
+
+
+        .calendar-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .calendar-header p {
+
+            margin: 0;
+
+            color: var(--muted);
+
+        }
+
+
+        .calendar-search {
+
+            display: flex;
+
+            gap: 10px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .calendar-search input[type="text"] {
+            flex: 1;
+        }
+
+
+        .calendar-controls {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .calendar-navigation {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+        }
+
+
+        .calendar-month {
+
+            font-size: 21px;
+
+            font-weight: 700;
+
+            color: var(--text);
+
+        }
+
+
+        .calendar-container {
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            box-shadow: var(--shadow);
+
+        }
+
+
+        .calendar-weekdays {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(7, minmax(0, 1fr));
+
+            background: var(--background-secondary);
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .calendar-weekday {
+
+            padding: 13px 8px;
+
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .calendar-week {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(7, minmax(0, 1fr));
+
+            border-bottom:
+                1px solid var(--border);
+
+        }
+
+
+        .calendar-week:last-child {
+            border-bottom: none;
+        }
+
+
+        .calendar-day {
+
+            min-width: 0;
+
+            min-height: 140px;
+
+            padding: 9px;
+
+            background: var(--card);
+
+            border-right:
+                1px solid var(--border);
+
+        }
+
+
+        .calendar-day:last-child {
+            border-right: none;
+        }
+
+
+        .calendar-day:hover {
+            background: var(--card-hover);
+        }
+
+
+        .calendar-day.other-month {
+            opacity: 0.35;
+        }
+
+
+        .calendar-day.today {
+
+            background:
+                rgba(139, 92, 246, 0.07);
+
+        }
+
+
+        .calendar-day-number {
+
+            display: flex;
+
+            justify-content: flex-start;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .day-number {
+
+            width: 28px;
+
+            height: 28px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            font-size: 13px;
+
+            color: var(--text);
+
+        }
+
+
+        .calendar-day.today .day-number {
+
+            background: var(--purple);
+
+            color: white;
+
+            font-weight: 700;
+
+        }
+
+
+        /* =================================================
+           APPOINTMENT BASE
+        ================================================= */
+
+        .calendar-appointment {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: var(--text);
+
+            border-radius: 6px;
+
+            padding: 7px 8px;
+
+            margin-bottom: 6px;
+
+            overflow: hidden;
+
+            transition:
+                background 0.15s ease,
+                transform 0.15s ease;
+
+        }
+
+
+        .calendar-appointment:hover {
+            transform: translateX(2px);
+        }
+
+
+        /* =================================================
+           UPCOMING
+        ================================================= */
+
+        .calendar-appointment.upcoming {
+
+            background:
+                rgba(139, 92, 246, 0.12);
+
+            border-left:
+                3px solid var(--purple);
+
+        }
+
+
+        .calendar-appointment.upcoming:hover {
+
+            background:
+                rgba(139, 92, 246, 0.22);
+
+        }
+
+
+        /* =================================================
+           COMPLETED
+        ================================================= */
+
+        .calendar-appointment.completed {
+
+            background:
+                rgba(34, 197, 94, 0.10);
+
+            border-left:
+                3px solid #22c55e;
+
+        }
+
+
+        .calendar-appointment.completed:hover {
+
+            background:
+                rgba(34, 197, 94, 0.18);
+
+        }
+
+
+        /* =================================================
+           CANCELLED
+        ================================================= */
+
+        .calendar-appointment.cancelled {
+
+            background:
+                rgba(239, 68, 68, 0.10);
+
+            border-left:
+                3px solid #ef4444;
+
+            opacity: 0.75;
+
+        }
+
+
+        .calendar-appointment.cancelled:hover {
+
+            background:
+                rgba(239, 68, 68, 0.18);
+
+        }
+
+
+        .calendar-appointment-time {
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            margin-bottom: 2px;
+
+        }
+
+
+        .upcoming .calendar-appointment-time {
+            color: var(--purple);
+        }
+
+
+        .completed .calendar-appointment-time {
+            color: #16a34a;
+        }
+
+
+        .cancelled .calendar-appointment-time {
+            color: #dc2626;
+        }
+
+
+        .calendar-appointment-client {
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
+        }
+
+
+        .calendar-appointment-status {
+
+            font-size: 9px;
+
+            margin-top: 3px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+
+        }
+
+
+        .upcoming .calendar-appointment-status {
+            color: var(--purple);
+        }
+
+
+        .completed .calendar-appointment-status {
+            color: #16a34a;
+        }
+
+
+        .cancelled .calendar-appointment-status {
+            color: #dc2626;
+        }
+
+
+        .calendar-add {
+
+            display: block;
+
+            color: var(--muted);
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            padding: 3px;
+
+            opacity: 0;
+
+        }
+
+
+        .calendar-day:hover .calendar-add {
+            opacity: 1;
+        }
+
+
+        .calendar-add:hover {
+            color: var(--purple);
+        }
+
+
+        /* =================================================
+           LEGEND
+        ================================================= */
+
+        .calendar-legend {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 18px;
+
+            margin-top: 15px;
+
+            font-size: 12px;
+
+            color: var(--muted);
+
+        }
+
+
+        .legend-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+        }
+
+
+        .legend-dot {
+
+            width: 9px;
+
+            height: 9px;
+
+            border-radius: 50%;
+
+        }
+
+
+        .legend-upcoming {
+            background: var(--purple);
+        }
+
+
+        .legend-completed {
+            background: #22c55e;
+        }
+
+
+        .legend-cancelled {
+            background: #ef4444;
+        }
+
+
+        /* =================================================
+           MOBILE
+        ================================================= */
+
+        @media (max-width: 850px) {
+
+            .calendar-day {
+
+                min-height: 110px;
+
+                padding: 6px;
+
+            }
+
+
+            .calendar-appointment {
+                padding: 5px;
+            }
+
+
+            .calendar-appointment-client {
+                font-size: 10px;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .calendar-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+
+            .calendar-controls {
+
+                flex-direction: column;
+
+                align-items: stretch;
+
+            }
+
+
+            .calendar-navigation {
+
+                justify-content: center;
+
+            }
+
+
+            .calendar-month {
+
+                order: -1;
+
+                text-align: center;
+
+            }
+
+
+            .calendar-weekday {
+
+                font-size: 9px;
+
+                padding: 9px 2px;
+
+            }
+
+
+            .calendar-day {
+
+                min-height: 85px;
+
+                padding: 4px;
+
+            }
+
+
+            .day-number {
+
+                width: 24px;
+
+                height: 24px;
+
+                font-size: 11px;
+
+            }
+
+
+            .calendar-appointment {
+
+                padding: 4px;
+
+            }
+
+
+            .calendar-appointment-time {
+
+                display: none;
+
+            }
+
+
+            .calendar-appointment-client {
+
+                font-size: 9px;
+
+            }
+
+
+            .calendar-appointment-status {
+
+                display: none;
+
+            }
+
+
+            .calendar-add {
+
+                display: none;
+
+            }
+
+
+            .calendar-legend {
+
+                justify-content: center;
+
+                flex-wrap: wrap;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a
+            href="/appointments"
+            class="active"
+        >
+            Appointments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="container calendar-page">
+
+
+    <!-- HEADER -->
+
+    <div class="calendar-header">
+
+        <div>
+
+            <h1>
+                Appointments
+            </h1>
+
+            <p>
+                Manage your schedule and upcoming sessions.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/add-appointment"
+            class="button"
+        >
+            + Add Appointment
+        </a>
+
+    </div>
+
+
+
+    <!-- SEARCH -->
+
+    <form
+        method="GET"
+        action="/appointments"
+        class="calendar-search"
+    >
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by client name..."
+            value="{{ search }}"
+        >
+
+
+        <input
+            type="hidden"
+            name="month"
+            value="{{ current_month }}"
+        >
+
+
+        <button
+            type="submit"
+            class="button"
+        >
+            Search
+        </button>
+
+
+        {% if search %}
+
+            <a
+                href="/appointments?month={{ current_month }}"
+                class="button secondary"
+            >
+                Clear
+            </a>
+
+        {% endif %}
+
+    </form>
+
+
+
+    <!-- CALENDAR CONTROLS -->
+
+    <div class="calendar-controls">
+
+
+        <div class="calendar-navigation">
+
+            <a
+                href="/appointments?month={{ previous_month }}{% if search %}&search={{ search }}{% endif %}"
+                class="button secondary"
+            >
+                ←
+            </a>
+
+
+            <a
+                href="/appointments"
+                class="button secondary"
+            >
+                Today
+            </a>
+
+
+            <a
+                href="/appointments?month={{ next_month }}{% if search %}&search={{ search }}{% endif %}"
+                class="button secondary"
+            >
+                →
+            </a>
+
+        </div>
+
+
+        <div class="calendar-month">
+
+            {{ month_name }} {{ year }}
+
+        </div>
+
+
+        <div></div>
+
+    </div>
+
+
+
+    <!-- CALENDAR -->
+
+    <div class="calendar-container">
+
+
+        <div class="calendar-weekdays">
+
+            <div class="calendar-weekday">
+                Monday
+            </div>
+
+            <div class="calendar-weekday">
+                Tuesday
+            </div>
+
+            <div class="calendar-weekday">
+                Wednesday
+            </div>
+
+            <div class="calendar-weekday">
+                Thursday
+            </div>
+
+            <div class="calendar-weekday">
+                Friday
+            </div>
+
+            <div class="calendar-weekday">
+                Saturday
+            </div>
+
+            <div class="calendar-weekday">
+                Sunday
+            </div>
+
+        </div>
+
+
+
+        {% for week in calendar_weeks %}
+
+            <div class="calendar-week">
+
+
+                {% for day in week %}
+
+                    <div
+                        class="
+                            calendar-day
+
+                            {% if day.date.month != month %}
+                                other-month
+                            {% endif %}
+
+                            {% if day.date.isoformat() == today %}
+                                today
+                            {% endif %}
+                        "
+                    >
+
+
+                        <div class="calendar-day-number">
+
+                            <span class="day-number">
+
+                                {{ day.date.day }}
+
+                            </span>
+
+                        </div>
+
+
+
+                        {% for appointment in day.appointments %}
+
+
+                            <a
+                                href="/edit-appointment/{{ appointment['id'] }}"
+                                class="
+                                    calendar-appointment
+
+                                    {% if appointment['status'] == 'Completed' %}
+                                        completed
+                                    {% elif appointment['status'] == 'Cancelled' %}
+                                        cancelled
+                                    {% else %}
+                                        upcoming
+                                    {% endif %}
+                                "
+                                title="Edit appointment"
+                            >
+
+
+                                <div
+                                    class="calendar-appointment-time"
+                                >
+
+                                    {{ appointment["appointment_time"] }}
+
+                                </div>
+
+
+                                <div
+                                    class="calendar-appointment-client"
+                                >
+
+                                    {{ appointment["client_name"] }}
+
+                                </div>
+
+
+                                <div
+                                    class="calendar-appointment-status"
+                                >
+
+                                    {{ appointment["status"] }}
+
+                                </div>
+
+
+                            </a>
+
+
+                        {% endfor %}
+
+
+
+                        {% if day.date.month == month %}
+
+                            <a
+                                href="/add-appointment?date={{ day.date.isoformat() }}"
+                                class="calendar-add"
+                            >
+                                + Add appointment
+                            </a>
+
+                        {% endif %}
+
+
+                    </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        {% endfor %}
+
+
+    </div>
+
+
+
+    <!-- LEGEND -->
+
+    <div class="calendar-legend">
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot legend-upcoming"
+            ></span>
+
+            Upcoming
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot legend-completed"
+            ></span>
+
+            Completed
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span
+                class="legend-dot legend-cancelled"
+            ></span>
+
+            Cancelled
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

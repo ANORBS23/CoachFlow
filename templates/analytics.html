@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Analytics - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =========================================
+           ANALYTICS PAGE
+        ========================================= */
+
+        .analytics-page {
+            padding-bottom: 60px;
+        }
+
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-header h1 {
+            margin: 0 0 7px 0;
+            font-size: 30px;
+        }
+
+        .analytics-header p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .analytics-header-badge {
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            color: var(--purple);
+            padding: 8px 13px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           ANALYTICS NAVIGATION
+        ========================================= */
+
+        .analytics-navigation {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 30px;
+            padding: 6px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .analytics-navigation a {
+            text-decoration: none;
+            color: var(--muted);
+            padding: 9px 14px;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .analytics-navigation a:hover {
+            color: var(--text);
+            background: var(--background-secondary);
+        }
+
+        .analytics-navigation a.active {
+            color: var(--text);
+            background: var(--purple);
+        }
+
+
+        /* =========================================
+           KPI CARDS
+        ========================================= */
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .analytics-stat-card {
+            position: relative;
+            overflow: hidden;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+            transition: 0.2s ease;
+        }
+
+        .analytics-stat-card:hover {
+            transform: translateY(-2px);
+            background: var(--card-hover);
+        }
+
+        .analytics-stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 17px;
+        }
+
+        .analytics-stat-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--purple);
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .analytics-stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .analytics-stat-value {
+            font-size: 28px;
+            font-weight: 750;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .analytics-stat-description {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+
+        /* =========================================
+           MAIN GRID
+        ========================================= */
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .analytics-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .analytics-card-header h2 {
+            font-size: 17px;
+            margin: 0 0 5px 0;
+        }
+
+        .analytics-card-description {
+            color: var(--muted);
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .analytics-card-tag {
+            padding: 5px 9px;
+            border-radius: 6px;
+            background: var(--background-secondary);
+            color: var(--muted);
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+
+        /* =========================================
+           CLIENT REVENUE
+        ========================================= */
+
+        .analytics-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .analytics-row:first-child {
+            padding-top: 0;
+        }
+
+        .analytics-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .analytics-row-left {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .analytics-rank {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 7px;
+            background: var(--background-secondary);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .analytics-row-name {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .analytics-row-value {
+            color: var(--purple);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           PROGRESS BARS
+        ========================================= */
+
+        .analytics-bar-container {
+            margin-bottom: 20px;
+        }
+
+        .analytics-bar-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .analytics-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .analytics-bar-name {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .analytics-bar-number {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .analytics-bar-background {
+            width: 100%;
+            height: 7px;
+            background: var(--background-secondary);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .analytics-bar {
+            height: 100%;
+            background: var(--purple);
+            border-radius: 20px;
+            width: 0;
+            transition: width 0.7s ease;
+        }
+
+
+        /* =========================================
+           CONVERSION CARD
+        ========================================= */
+
+        .conversion-highlight {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            margin-bottom: 18px;
+            border-radius: 11px;
+            background: var(--background-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .conversion-circle {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 5px solid var(--purple);
+            flex-shrink: 0;
+        }
+
+        .conversion-number {
+            font-size: 19px;
+            font-weight: 750;
+            color: var(--text);
+        }
+
+        .conversion-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .conversion-label {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           EMPTY STATES
+        ========================================= */
+
+        .analytics-empty {
+            text-align: center;
+            color: var(--muted);
+            padding: 35px 10px;
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           INSIGHT BOX
+        ========================================= */
+
+        .analytics-insight {
+            margin-top: 20px;
+            padding: 18px 20px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.18);
+        }
+
+        .analytics-insight-title {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .analytics-insight-text {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 1050px) {
+
+            .analytics-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .analytics-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-navigation {
+                width: 100%;
+                overflow-x: auto;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .analytics-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-card {
+                padding: 20px;
+            }
+
+            .analytics-stat-value {
+                font-size: 24px;
+            }
+
+            .conversion-highlight {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     TOP NAVIGATION
+========================================= -->
+
+<header class="top-navigation">
+
+    <div class="top-logo">
+
+        <h2>CoachFlow</h2>
+
+        <span>Business Management</span>
+
+    </div>
+
+    <nav class="top-nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/analytics" class="active">
+            Analytics
+        </a>
+
+        <a href="/follow-ups">
+            Follow-ups
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+<!-- =========================================
+     MAIN CONTENT
+========================================= -->
+
+<main class="container analytics-page">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="analytics-header">
+
+        <div>
+
+            <h1>
+                Analytics
+            </h1>
+
+            <p>
+                Understand your revenue, leads and overall business performance.
+            </p>
+
+        </div>
+
+        <div class="analytics-header-badge">
+            Business Overview
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         KEY METRICS
+    ========================================= -->
+
+    <section class="analytics-stats">
+
+
+        <!-- TOTAL REVENUE -->
+
+        <div class="analytics-stat-card">
+
+            <div class="analytics-stat-top">
+
+                <div class="analytics-stat-label">
+                    Total Revenue
+                </div>
+
+                <div class="analytics-stat-icon">
+                    £
+                </div>
+
+            </div>
+
+            <div class="analytics-stat-value">
+
+                £{{ "%.2f"|format(revenue_stats["total"] or 0) }}
+
+            </div>
+
+            <div class="analytics-stat-description">
+                Revenue recorded across all clients
+            </div>
+
+        </div>
+
+
+        <!-- AVERAGE CLIENT VALUE -->
+
+        <div class="analytics-stat-card">
+
+            <div class="analytics-stat-top">
+
+                <div class="analytics-stat-label">
+                    Avg. Client Value
+                </div>
+
+                <div class="analytics-stat-icon">
+                    ↑
+                </div>
+
+            </div>
+
+            <div class="analytics-stat-value">
+
+                £{{ "%.2f"|format(revenue_stats["average"] or 0) }}
+
+            </div>
+
+            <div class="analytics-stat-description">
+                Average recorded client revenue
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL LEADS -->
+
+        <div class="analytics-stat-card">
+
+            <div class="analytics-stat-top">
+
+                <div class="analytics-stat-label">
+                    Total Leads
+                </div>
+
+                <div class="analytics-stat-icon">
+                    L
+                </div>
+
+            </div>
+
+            <div class="analytics-stat-value">
+
+                {{ lead_analytics["total"] }}
+
+            </div>
+
+            <div class="analytics-stat-description">
+                Potential customers recorded
+            </div>
+
+        </div>
+
+
+        <!-- CONVERSION RATE -->
+
+        <div class="analytics-stat-card">
+
+            <div class="analytics-stat-top">
+
+                <div class="analytics-stat-label">
+                    Conversion Rate
+                </div>
+
+                <div class="analytics-stat-icon">
+                    %
+                </div>
+
+            </div>
+
+            <div class="analytics-stat-value">
+
+                {{ "%.1f"|format(lead_analytics["conversion_rate"]) }}%
+
+            </div>
+
+            <div class="analytics-stat-description">
+                Leads converted into clients
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================================
+         REVENUE + LEAD SOURCES
+    ========================================= -->
+
+    <section class="analytics-grid">
+
+
+        <!-- HIGHEST VALUE CLIENTS -->
+
+        <div class="analytics-card">
+
+            <div class="analytics-card-header">
+
+                <div>
+
+                    <h2>
+                        Highest-Value Clients
+                    </h2>
+
+                    <p class="analytics-card-description">
+                        Clients ranked by recorded revenue.
+                    </p>
+
+                </div>
+
+                <div class="analytics-card-tag">
+                    Revenue
+                </div>
+
+            </div>
+
+
+            {% if revenue_stats["highest"] %}
+
+                {% for client in revenue_stats["highest"] %}
+
+                    <div class="analytics-row">
+
+                        <div class="analytics-row-left">
+
+                            <div class="analytics-rank">
+                                {{ loop.index }}
+                            </div>
+
+                            <div class="analytics-row-name">
+                                {{ client["client_name"] }}
+                            </div>
+
+                        </div>
+
+                        <div class="analytics-row-value">
+                            £{{ "%.2f"|format(client["revenue"] or 0) }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="analytics-empty">
+                    No client revenue has been recorded yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- LEAD SOURCES -->
+
+        <div class="analytics-card">
+
+            <div class="analytics-card-header">
+
+                <div>
+
+                    <h2>
+                        Lead Sources
+                    </h2>
+
+                    <p class="analytics-card-description">
+                        Where your potential customers are coming from.
+                    </p>
+
+                </div>
+
+                <div class="analytics-card-tag">
+                    Acquisition
+                </div>
+
+            </div>
+
+
+            {% if lead_analytics["sources"] %}
+
+                {% set max_source = lead_analytics["sources"][0]["count"] %}
+
+                {% for source in lead_analytics["sources"] %}
+
+                    <div class="analytics-bar-container">
+
+                        <div class="analytics-bar-header">
+
+                            <span class="analytics-bar-name">
+                                {{ source["source"] }}
+                            </span>
+
+                            <span class="analytics-bar-number">
+                                {{ source["count"] }}
+                                lead{% if source["count"] != 1 %}s{% endif %}
+                            </span>
+
+                        </div>
+
+                        <div class="analytics-bar-background">
+
+                            <div
+                                class="analytics-bar"
+                                data-width="{{ (source['count'] / max_source * 100) if max_source else 0 }}"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="analytics-empty">
+                    No lead source data has been recorded yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================================
+         PIPELINE + CONVERSION
+    ========================================= -->
+
+    <section class="analytics-grid">
+
+
+        <!-- LEAD PIPELINE -->
+
+        <div class="analytics-card">
+
+            <div class="analytics-card-header">
+
+                <div>
+
+                    <h2>
+                        Lead Pipeline
+                    </h2>
+
+                    <p class="analytics-card-description">
+                        Breakdown of your current sales pipeline.
+                    </p>
+
+                </div>
+
+                <div class="analytics-card-tag">
+                    Pipeline
+                </div>
+
+            </div>
+
+
+            {% if lead_analytics["statuses"] %}
+
+                {% set max_status = lead_analytics["statuses"][0]["count"] %}
+
+                {% for status in lead_analytics["statuses"] %}
+
+                    <div class="analytics-bar-container">
+
+                        <div class="analytics-bar-header">
+
+                            <span class="analytics-bar-name">
+                                {{ status["status"] }}
+                            </span>
+
+                            <span class="analytics-bar-number">
+                                {{ status["count"] }}
+                            </span>
+
+                        </div>
+
+                        <div class="analytics-bar-background">
+
+                            <div
+                                class="analytics-bar"
+                                data-width="{{ (status['count'] / max_status * 100) if max_status else 0 }}"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="analytics-empty">
+                    No lead pipeline data has been recorded yet.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CONVERSION SUMMARY -->
+
+        <div class="analytics-card">
+
+            <div class="analytics-card-header">
+
+                <div>
+
+                    <h2>
+                        Conversion Summary
+                    </h2>
+
+                    <p class="analytics-card-description">
+                        How effectively leads are becoming clients.
+                    </p>
+
+                </div>
+
+                <div class="analytics-card-tag">
+                    Performance
+                </div>
+
+            </div>
+
+
+            <div class="conversion-highlight">
+
+                <div class="conversion-circle">
+
+                    <span class="conversion-number">
+                        {{ "%.1f"|format(lead_analytics["conversion_rate"]) }}%
+                    </span>
+
+                </div>
+
+                <div>
+
+                    <div class="conversion-title">
+                        Lead conversion rate
+                    </div>
+
+                    <div class="conversion-label">
+                        Percentage of recorded leads that have converted into clients.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-row">
+
+                <div class="analytics-row-name">
+                    Total Leads
+                </div>
+
+                <div class="analytics-row-value">
+                    {{ lead_analytics["total"] }}
+                </div>
+
+            </div>
+
+
+            <div class="analytics-row">
+
+                <div class="analytics-row-name">
+                    Active Leads
+                </div>
+
+                <div class="analytics-row-value">
+                    {{ lead_analytics["active"] }}
+                </div>
+
+            </div>
+
+
+            <div class="analytics-row">
+
+                <div class="analytics-row-name">
+                    Converted Leads
+                </div>
+
+                <div class="analytics-row-value">
+                    {{ lead_analytics["converted"] }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =========================================
+         BUSINESS INSIGHT
+    ========================================= -->
+
+    <div class="analytics-insight">
+
+        <div class="analytics-insight-title">
+            Business Insight
+        </div>
+
+        <p class="analytics-insight-text">
+
+            Your analytics provide an overview of revenue,
+            customer acquisition and lead conversion. As CoachFlow
+            develops, this section can become an intelligent area
+            where AI identifies trends and recommends actions.
+
+        </p>
+
+    </div>
+
+
+</main>
+
+
+<script>
+
+    document
+        .querySelectorAll(".analytics-bar")
+        .forEach(function(bar) {
+
+            const width = parseFloat(
+                bar.dataset.width
+            );
+
+            if (!isNaN(width)) {
+
+                bar.style.width =
+                    Math.min(
+                        Math.max(width, 0),
+                        100
+                    ) + "%";
+
+            }
+
+        });
+
+</script>
+
+
+</body>
+
+</html>

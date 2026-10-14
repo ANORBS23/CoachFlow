@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Lead - CoachFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">CoachFlow</div>
+
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/leads">Leads</a>
+        <a href="/clients">Clients</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-header">
+        <div>
+            <h1>Edit Lead</h1>
+            <p>Update {{ lead['lead_name'] }}'s information.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="form-card">
+
+            <form method="POST">
+                <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+>
+
+                <div class="form-group">
+                    <label for="lead_name">Lead Name</label>
+
+                    <input
+                        type="text"
+                        name="lead_name"
+                        id="lead_name"
+                        value="{{ lead['lead_name'] }}"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            value="{{ lead['email'] }}"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            id="phone"
+                            value="{{ lead['phone'] }}"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="source">Source</label>
+
+                        <select name="source" id="source">
+
+                            <option value="">Select source</option>
+
+                            <option value="Instagram"
+                                {% if lead['source'] == 'Instagram' %}selected{% endif %}>
+                                Instagram
+                            </option>
+
+                            <option value="Facebook"
+                                {% if lead['source'] == 'Facebook' %}selected{% endif %}>
+                                Facebook
+                            </option>
+
+                            <option value="Website"
+                                {% if lead['source'] == 'Website' %}selected{% endif %}>
+                                Website
+                            </option>
+
+                            <option value="Referral"
+                                {% if lead['source'] == 'Referral' %}selected{% endif %}>
+                                Referral
+                            </option>
+
+                            <option value="Other"
+                                {% if lead['source'] == 'Other' %}selected{% endif %}>
+                                Other
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest_level">Interest Level</label>
+
+                        <select name="interest_level" id="interest_level" required>
+
+                            <option value="Low"
+                                {% if lead['interest_level'] == 'Low' %}selected{% endif %}>
+                                Low
+                            </option>
+
+                            <option value="Medium"
+                                {% if lead['interest_level'] == 'Medium' %}selected{% endif %}>
+                                Medium
+                            </option>
+
+                            <option value="High"
+                                {% if lead['interest_level'] == 'High' %}selected{% endif %}>
+                                High
+                            </option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+
+                    <select name="status" id="status" required>
+
+                        <option value="New"
+                            {% if lead['status'] == 'New' %}selected{% endif %}>
+                            New
+                        </option>
+
+                        <option value="Contacted"
+                            {% if lead['status'] == 'Contacted' %}selected{% endif %}>
+                            Contacted
+                        </option>
+
+                        <option value="Interested"
+                            {% if lead['status'] == 'Interested' %}selected{% endif %}>
+                            Interested
+                        </option>
+
+                        <option value="Converted"
+                            {% if lead['status'] == 'Converted' %}selected{% endif %}>
+                            Converted
+                        </option>
+
+                        <option value="Lost"
+                            {% if lead['status'] == 'Lost' %}selected{% endif %}>
+                            Lost
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        rows="5"
+                    >{{ lead['notes'] or '' }}</textarea>
+                </div>
+
+                <div class="form-actions">
+
+                    <a
+                        href="/lead/{{ lead['id'] }}"
+                        class="button secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="button">
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

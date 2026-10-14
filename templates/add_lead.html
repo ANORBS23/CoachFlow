@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Lead - CoachFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">CoachFlow</div>
+
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/leads">Leads</a>
+        <a href="/clients">Clients</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-header">
+        <div>
+            <h1>Add Lead</h1>
+            <p>Record a new potential customer.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="form-card">
+
+            <form method="POST">
+                <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+>
+
+                <div class="form-group">
+                    <label for="lead_name">Lead Name</label>
+
+                    <input
+                        type="text"
+                        name="lead_name"
+                        id="lead_name"
+                        placeholder="Enter lead name"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="lead@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            id="phone"
+                            placeholder="Enter phone number"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="source">Source</label>
+
+                        <select name="source" id="source">
+                            <option value="">Select source</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Website">Website</option>
+                            <option value="Referral">Referral</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interest_level">Interest Level</label>
+
+                        <select name="interest_level" id="interest_level" required>
+                            <option value="">Select interest level</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+
+                    <select name="status" id="status" required>
+                        <option value="New">New</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Interested">Interested</option>
+                        <option value="Converted">Converted</option>
+                        <option value="Lost">Lost</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        rows="5"
+                        placeholder="Add notes about this lead..."
+                    ></textarea>
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="/leads" class="button secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="button">
+                        Add Lead
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

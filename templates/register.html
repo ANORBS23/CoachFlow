@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - CoachFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="auth-page">
+
+<div class="auth-container">
+
+    <div class="auth-logo">
+        CoachFlow
+    </div>
+
+    <div class="auth-card">
+
+        <div class="auth-header">
+
+            <h1>Create Your Account</h1>
+
+            <p>
+                Start managing your business with CoachFlow.
+            </p>
+
+        </div>
+
+        <form method="POST">
+            <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+>
+
+            <div class="form-group">
+
+                <label for="business_name">
+                    Business Name
+                </label>
+
+                <input
+                    type="text"
+                    name="business_name"
+                    id="business_name"
+                    placeholder="e.g. Alex Fitness"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="you@example.com"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Create a strong password"
+                    required
+                >
+
+            </div>
+
+            <button type="submit" class="button auth-button">
+                Create Account
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+
+            <p>
+                Already have an account?
+                <a href="/">Sign in</a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

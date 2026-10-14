@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =========================
+           TOP NAVIGATION
+        ========================= */
+
+        .top-navigation {
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: #111111;
+        }
+
+        .top-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .top-logo h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .top-logo span {
+            margin-left: 8px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .top-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .top-nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 9px 13px;
+            border-radius: 8px;
+            transition: 0.2s ease;
+        }
+
+        .top-nav-links a:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .top-nav-links a.active {
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.14);
+        }
+
+        .top-nav-links .logout {
+            color: #9ca3af;
+            margin-left: 5px;
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        .dashboard-content {
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 28px;
+            gap: 20px;
+        }
+
+        .dashboard-header h1 {
+            margin: 0 0 6px 0;
+        }
+
+        .dashboard-header p {
+            margin: 0;
+            color: #9ca3af;
+        }
+
+
+        /* =========================
+           KPI CARDS
+        ========================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 22px;
+            transition: 0.2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(139, 92, 246, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .stat-title {
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 92, 246, 0.12);
+            color: #a78bfa;
+            font-size: 16px;
+        }
+
+        .stat-value {
+            font-size: 29px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .stat-description {
+            margin-top: 7px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+
+        /* =========================
+           MAIN GRID
+        ========================= */
+
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-row.equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .dashboard-card {
+            background: #171717;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0 0 5px 0;
+            font-size: 17px;
+            color: #ffffff;
+        }
+
+        .card-header p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .view-link {
+            color: #a78bfa;
+            text-decoration: none;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .view-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           APPOINTMENTS
+        ========================= */
+
+        .appointment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .appointment-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #1d1d1d;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .appointment-main {
+            min-width: 0;
+        }
+
+        .appointment-name {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .appointment-notes {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .appointment-time {
+            color: #a78bfa;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: right;
+        }
+
+
+        /* =========================
+           FOLLOW UPS
+        ========================= */
+
+        .follow-up-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .follow-up-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px;
+            border-radius: 10px;
+            background: #1d1d1d;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .follow-up-name {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .follow-up-date {
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .follow-up-button {
+            text-decoration: none;
+            color: #a78bfa;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            padding: 30px 10px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           LEAD PIPELINE
+        ========================= */
+
+        .pipeline-chart {
+            width: 100%;
+            border-radius: 10px;
+            background: #1d1d1d;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .pipeline-chart img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+
+        /* =========================
+           QUICK ACTIONS
+        ========================= */
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .quick-action {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #1d1d1d;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .quick-action:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            background: rgba(139, 92, 246, 0.12);
+            color: #a78bfa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+        }
+
+        .quick-action-text {
+            min-width: 0;
+        }
+
+        .quick-action-title {
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .quick-action-description {
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dashboard-row {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 750px) {
+
+            .top-navigation {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 15px;
+                padding: 18px 20px;
+            }
+
+            .top-nav-links {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 3px;
+            }
+
+            .top-nav-links a {
+                white-space: nowrap;
+            }
+
+            .dashboard-content {
+                padding: 24px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-row.equal {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     TOP NAVIGATION
+========================== -->
+
+<header class="top-navigation">
+
+    <div class="top-logo">
+
+        <h2>CoachFlow</h2>
+
+        <span>Business Management</span>
+
+    </div>
+
+
+    <nav class="top-nav-links">
+
+        <a
+            href="/dashboard"
+            class="active"
+        >
+            Dashboard
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href ="/analytics">
+            Analytics
+        </a>
+        <a href ="/follow-ups">
+            Follow ups
+        </a>
+           
+
+        <a
+            href="/logout"
+            class="logout"
+        >
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================
+     MAIN CONTENT
+========================== -->
+
+<main class="dashboard-content">
+
+
+    <!-- Dashboard Header -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                Welcome back, {{ session["business_name"] }}.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         KPI CARDS
+    ========================== -->
+
+    <div class="stats-grid">
+
+
+        <!-- Revenue -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-title">
+                    Total Revenue
+                </span>
+
+                <div class="stat-icon">
+                    £
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+
+                £{{ "%.2f"|format(total_revenue or 0) }}
+
+            </div>
+
+            <div class="stat-description">
+                Revenue across all clients
+            </div>
+
+        </div>
+
+
+
+        <!-- Clients -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-title">
+                    Clients
+                </span>
+
+                <div class="stat-icon">
+                    👤
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+
+                {{ clients|length }}
+
+            </div>
+
+            <div class="stat-description">
+                Current active clients
+            </div>
+
+        </div>
+
+
+
+        <!-- Active Leads -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-title">
+                    Active Leads
+                </span>
+
+                <div class="stat-icon">
+                    ◇
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+
+                {{ leads|selectattr("status", "ne", "Converted")|list|length }}
+
+            </div>
+
+            <div class="stat-description">
+                Potential customers
+            </div>
+
+        </div>
+
+
+
+        <!-- Appointments Today -->
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-title">
+                    Today
+                </span>
+
+                <div class="stat-icon">
+                    ✓
+                </div>
+
+            </div>
+
+            <div class="stat-value">
+
+                {{ todays_appointments|length }}
+
+            </div>
+
+            <div class="stat-description">
+                Appointments today
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         APPOINTMENTS + FOLLOW UPS
+    ========================== -->
+
+    <div class="dashboard-row">
+
+
+        <!-- Upcoming Appointments -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Upcoming Appointments
+                    </h2>
+
+                    <p>
+                        Your next scheduled sessions
+                    </p>
+
+                </div>
+
+                <a
+                    href="/appointments"
+                    class="view-link"
+                >
+                    View all →
+                </a>
+
+            </div>
+
+
+            <div class="appointment-list">
+
+                {% if appointments %}
+
+                    {% for appointment in appointments[:5] %}
+
+                        <div class="appointment-item">
+
+                            <div class="appointment-main">
+
+                                <div class="appointment-name">
+                                    {{ appointment["client_name"] }}
+                                </div>
+
+                                {% if appointment["notes"] %}
+
+                                    <div class="appointment-notes">
+                                        {{ appointment["notes"] }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="appointment-time">
+
+                                {{ appointment["appointment_date"] }}
+
+                                <br>
+
+                                {{ appointment["appointment_time"] }}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+                        No upcoming appointments.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Follow Ups -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Follow-ups Due
+                    </h2>
+
+                    <p>
+                        Leads that need your attention
+                    </p>
+
+                </div>
+
+                <a
+                    href="/leads"
+                    class="view-link"
+                >
+                    View leads →
+                </a>
+
+            </div>
+
+
+            <div class="follow-up-list">
+
+                {% if due_follow_ups %}
+
+                    {% for lead in due_follow_ups[:5] %}
+
+                        <div class="follow-up-item">
+
+                            <div>
+
+                                <div class="follow-up-name">
+                                    {{ lead["lead_name"] }}
+                                </div>
+
+                                <div class="follow-up-date">
+                                    Follow-up due:
+                                    {{ lead["next_follow_up"] }}
+                                </div>
+
+                            </div>
+
+
+                            <a
+                                href="/lead/{{ lead['id'] }}"
+                                class="follow-up-button"
+                            >
+                                Open →
+                            </a>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-state">
+                        No follow-ups due.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         PIPELINE + QUICK ACTIONS
+    ========================== -->
+
+    <div class="dashboard-row equal">
+
+
+        <!-- Lead Pipeline -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Lead Pipeline
+                    </h2>
+
+                    <p>
+                        Overview of your current leads
+                    </p>
+
+                </div>
+
+                <a
+                    href="/leads"
+                    class="view-link"
+                >
+                    Manage →
+                </a>
+
+            </div>
+
+
+            <div class="pipeline-chart">
+
+                <img
+                    src="/lead-chart"
+                    alt="Lead pipeline chart"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Quick Actions -->
+
+        <div class="dashboard-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Quick Actions
+                    </h2>
+
+                    <p>
+                        Common tasks
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <a
+                    href="/add-client"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <div class="quick-action-title">
+                            Add Client
+                        </div>
+
+                        <div class="quick-action-description">
+                            Create a new client
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <a
+                    href="/add-lead"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <div class="quick-action-title">
+                            Add Lead
+                        </div>
+
+                        <div class="quick-action-description">
+                            Add a potential customer
+                        </div>
+
+                    </div>
+
+                </a>
+
+
+
+                <a
+                    href="/add-appointment"
+                    class="quick-action"
+                >
+
+                    <div class="quick-action-icon">
+                        +
+                    </div>
+
+                    <div class="quick-action-text">
+
+                        <div class="quick-action-title">
+                            Add Appointment
+                        </div>
+
+                        <div class="quick-action-description">
+                            Schedule a session
+                        </div>
+
+                    </div>
+
+                </a>
+                <a href="/analytics" class="quick-action">
+
+               <div class="quick-action-content">
+
+               <strong>
+               View Analytics
+               </strong>
+
+               <span>
+               Analyse revenue and lead performance
+              </span>
+
+            </div>
+
+</a>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html>

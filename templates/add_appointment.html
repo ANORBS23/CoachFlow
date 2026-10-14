@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Appointment - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a
+            href="/appointments"
+            class="active"
+        >
+            Appointments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<main class="container">
+
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Add Appointment
+            </h1>
+
+            <p>
+                Schedule a new appointment with a client.
+            </p>
+
+        </div>
+
+
+        <a
+            href="/appointments"
+            class="button secondary"
+        >
+            ← Back to Calendar
+        </a>
+
+    </div>
+
+
+
+    <div class="form-card">
+
+
+        <form
+            method="POST"
+            action="/add-appointment"
+        >
+        <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}"
+>
+
+
+
+            <div class="form-group">
+
+                <label for="client_id">
+                    Client
+                </label>
+
+
+                <select
+                    id="client_id"
+                    name="client_id"
+                    required
+                >
+
+                    <option value="">
+                        Select a client
+                    </option>
+
+
+                    {% for client in clients %}
+
+                        <option
+                            value="{{ client['id'] }}"
+                        >
+
+                            {{ client['client_name'] }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="appointment_date">
+                    Date
+                </label>
+
+
+                <input
+                    type="date"
+                    id="appointment_date"
+                    name="appointment_date"
+                    value="{{ selected_date }}"
+                    required
+                >
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="appointment_time">
+                    Time
+                </label>
+
+
+                <input
+                    type="time"
+                    id="appointment_time"
+                    name="appointment_time"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Status
+                </label>
+
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Upcoming">
+                        Upcoming
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notes
+                </label>
+
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                    rows="5"
+                    placeholder="Add any notes about this appointment..."
+                ></textarea>
+
+            </div>
+
+
+
+            <div class="form-actions">
+
+                <a
+                    href="/appointments"
+                    class="button secondary"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Add Appointment
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

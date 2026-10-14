@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Client - CoachFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">CoachFlow</div>
+
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/leads">Leads</a>
+        <a href="/clients">Clients</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-header">
+        <div>
+            <h1>Add Client</h1>
+            <p>Add a new client to your business.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="form-card">
+
+            <form method="POST">
+                <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+                >
+                
+
+                <div class="form-group">
+                    <label for="client_name">Client Name</label>
+
+                    <input
+                        type="text"
+                        name="client_name"
+                        id="client_name"
+                        placeholder="Enter client name"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            placeholder="client@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            id="phone"
+                            placeholder="Enter phone number"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="goal">Goal</label>
+
+                    <input
+                        type="text"
+                        name="goal"
+                        id="goal"
+                        placeholder="e.g. Lose weight, build muscle..."
+                        required
+                    >
+                </div>
+                <div class="form-group">
+    <label for="revenue">Revenue (£)</label>
+
+    <input
+        type="number"
+        id="revenue"
+        name="revenue"
+        step="0.01"
+        min="0"
+        placeholder="e.g. 150"
+        required
+    >
+
+    <small>
+        Enter the amount this client is worth.
+    </small>
+</div>
+
+                <div class="form-group">
+                    <label for="notes">Notes</label>
+
+                    <textarea
+                        name="notes"
+                        id="notes"
+                        rows="5"
+                        placeholder="Add any additional information about this client..."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="form-actions">
+
+                    <a href="/clients" class="button secondary">
+                        Cancel
+                    </a>
+
+                    <button type="submit" class="button">
+                        Add Client
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

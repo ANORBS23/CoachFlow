@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ lead['lead_name'] }} - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <!-- ============================================= -->
+    <!-- HEADER -->
+    <!-- ============================================= -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                {{ lead['lead_name'] }}
+            </h1>
+
+            <p>
+                Lead management and follow-up automation.
+            </p>
+
+        </div>
+
+        <div class="form-actions">
+
+            <a
+                href="/edit-lead/{{ lead['id'] }}"
+                class="button secondary"
+            >
+                Edit Lead
+            </a>
+
+            <a
+                href="/leads"
+                class="button secondary"
+            >
+                Back to Leads
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <!-- ============================================= -->
+    <!-- LEAD INFORMATION -->
+    <!-- ============================================= -->
+
+    <div class="dashboard-grid">
+
+        <div class="card">
+
+            <h2>
+                Lead Information
+            </h2>
+
+            <p>
+                <strong>Email:</strong>
+                {{ lead['email'] }}
+            </p>
+
+            <p>
+                <strong>Phone:</strong>
+                {{ lead['phone'] }}
+            </p>
+
+            <p>
+                <strong>Source:</strong>
+                {{ lead['source'] or 'Not specified' }}
+            </p>
+
+            <p>
+                <strong>Interest:</strong>
+                {{ lead['interest_level'] }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ lead['status'] }}
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                {{ lead['created_at'] }}
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Follow-Up Status
+            </h2>
+
+            <p>
+
+                <strong>
+                    Last contacted:
+                </strong>
+
+                {{ lead['last_contacted'] or 'Never' }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Next follow-up:
+                </strong>
+
+                {{ lead['next_follow_up'] or 'Not scheduled' }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Automated follow-ups:
+                </strong>
+
+                {% if lead['follow_up_enabled'] %}
+
+                    <span>
+                        Enabled
+                    </span>
+
+                {% else %}
+
+                    <span>
+                        Disabled
+                    </span>
+
+                {% endif %}
+
+            </p>
+
+            <p>
+
+                <strong>
+                    Follow-ups sent:
+                </strong>
+
+                {{ lead['follow_up_count'] or 0 }}
+
+                / 3
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- AUTOMATED FOLLOW-UP -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            Automated Follow-Ups
+        </h2>
+
+        <p>
+            CoachFlow can automatically generate and email
+            follow-ups using AI when this lead reaches the
+            scheduled date.
+        </p>
+
+
+        {% if lead['follow_up_enabled'] %}
+
+            <div class="success-message">
+
+                Automated follow-ups are currently enabled.
+
+            </div>
+
+
+            <form
+                method="POST"
+                action="/lead/{{ lead['id'] }}/disable-follow-up"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <button
+                    type="submit"
+                    class="button secondary"
+                >
+                    Disable Automation
+                </button>
+
+            </form>
+
+
+        {% else %}
+
+            <form
+                method="POST"
+                action="/lead/{{ lead['id'] }}/schedule-follow-up"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="next_follow_up">
+
+                            First follow-up date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="next_follow_up"
+                            id="next_follow_up"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interval_days">
+
+                            Repeat every
+
+                        </label>
+
+                        <select
+                            name="interval_days"
+                            id="interval_days"
+                        >
+
+                            <option value="3">
+                                3 days
+                            </option>
+
+                            <option value="5">
+                                5 days
+                            </option>
+
+                            <option value="7">
+                                7 days
+                            </option>
+
+                            <option value="14">
+                                14 days
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Enable Automated Follow-Ups
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- NOTES -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            Notes
+        </h2>
+
+        <p>
+            {{ lead['notes'] or 'No notes have been added.' }}
+        </p>
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- AI REPLY -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            AI Reply Assistant
+        </h2>
+
+        <p>
+            Generate a response to this lead using the
+            information stored in CoachFlow.
+        </p>
+
+        <form
+            method="POST"
+            action="/lead/{{ lead['id'] }}/generate-reply"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <button
+                type="submit"
+                class="button"
+            >
+                ✨ Generate AI Reply
+            </button>
+
+        </form>
+
+
+        {% if ai_reply %}
+
+            <form
+                method="POST"
+                action="/lead/{{ lead['id'] }}/send-email"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <div class="form-group">
+
+                    <label for="ai_reply">
+                        Message
+                    </label>
+
+                    <textarea
+                        name="message"
+                        id="ai_reply"
+                        rows="8"
+                    >{{ ai_reply }}</textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Send Email
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- MANUAL AI FOLLOW-UP -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            AI Follow-Up Assistant
+        </h2>
+
+        <p>
+            Generate a follow-up manually before sending it.
+        </p>
+
+        <form
+            method="POST"
+            action="/lead/{{ lead['id'] }}/generate-follow-up"
+        >
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <button
+                type="submit"
+                class="button"
+            >
+                ✨ Generate AI Follow-Up
+            </button>
+
+        </form>
+
+
+        {% if ai_follow_up %}
+
+            <form
+                method="POST"
+                action="/lead/{{ lead['id'] }}/send-email"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <div class="form-group">
+
+                    <label for="ai_follow_up">
+                        Message
+                    </label>
+
+                    <textarea
+                        name="message"
+                        id="ai_follow_up"
+                        rows="8"
+                    >{{ ai_follow_up }}</textarea>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="button"
+                >
+                    Send Follow-Up
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- COMMUNICATION HISTORY -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            Communication History
+        </h2>
+
+        {% if communications %}
+
+            {% for communication in communications %}
+
+                <div class="communication-item">
+
+                    <p>
+
+                        <strong>
+                            {{ communication['subject'] }}
+                        </strong>
+
+                    </p>
+
+                    <p>
+                        {{ communication['message'] }}
+                    </p>
+
+                    <small>
+
+                        {{ communication['sent_at'] }}
+
+                        {% if communication['ai_generated'] %}
+                            · AI generated
+                        {% endif %}
+
+                    </small>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No communications have been recorded yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- ACTIONS -->
+    <!-- ============================================= -->
+
+    <div class="form-actions">
+
+        {% if lead['status'] != 'Converted' %}
+
+            <a
+                href="/convert-lead/{{ lead['id'] }}"
+                class="button"
+            >
+                Convert to Client
+            </a>
+
+        {% endif %}
+
+        <a
+            href="/delete-lead/{{ lead['id'] }}"
+            class="button secondary"
+        >
+            Delete Lead
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

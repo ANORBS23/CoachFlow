@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Follow-Ups - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Follow-Ups
+            </h1>
+
+            <p>
+                Manage your upcoming and automated customer follow-ups.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- OVERDUE -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            🔴 Overdue
+        </h2>
+
+        {% if overdue %}
+
+            {% for lead in overdue %}
+
+                <div class="communication-item">
+
+                    <h3>
+                        <a href="/lead/{{ lead['id'] }}">
+                            {{ lead['lead_name'] }}
+                        </a>
+                    </h3>
+
+                    <p>
+                        Follow-up was due:
+                        <strong>
+                            {{ lead['next_follow_up'] }}
+                        </strong>
+                    </p>
+
+                    <p>
+                        Status:
+                        {{ lead['status'] }}
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No overdue follow-ups.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- TODAY -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            🟡 Due Today
+        </h2>
+
+        {% if today %}
+
+            {% for lead in today %}
+
+                <div class="communication-item">
+
+                    <h3>
+                        <a href="/lead/{{ lead['id'] }}">
+                            {{ lead['lead_name'] }}
+                        </a>
+                    </h3>
+
+                    <p>
+                        {{ lead['email'] }}
+                    </p>
+
+                    <p>
+                        {% if lead['follow_up_enabled'] %}
+
+                            <strong>
+                                Automatic follow-up enabled
+                            </strong>
+
+                        {% else %}
+
+                            Manual follow-up
+
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No follow-ups due today.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- UPCOMING -->
+    <!-- ============================================= -->
+
+    <div class="card">
+
+        <h2>
+            🟢 Upcoming
+        </h2>
+
+        {% if upcoming %}
+
+            {% for lead in upcoming %}
+
+                <div class="communication-item">
+
+                    <h3>
+
+                        <a href="/lead/{{ lead['id'] }}">
+
+                            {{ lead['lead_name'] }}
+
+                        </a>
+
+                    </h3>
+
+                    <p>
+
+                        Next follow-up:
+
+                        <strong>
+                            {{ lead['next_follow_up'] }}
+                        </strong>
+
+                    </p>
+
+                    <p>
+
+                        {% if lead['follow_up_enabled'] %}
+
+                            🤖 Automated
+
+                        {% else %}
+
+                            Manual
+
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No upcoming follow-ups.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+</body>
+
+</html>

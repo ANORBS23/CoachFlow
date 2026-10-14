@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Clients - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+
+<!-- =========================
+     NAVIGATION
+========================= -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads">
+            Leads
+        </a>
+
+        <a
+            href="/clients"
+            class="active"
+        >
+            Clients
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Clients
+            </h1>
+
+            <p>
+                Manage your current clients.
+            </p>
+
+        </div>
+
+        <a
+            href="/add-client"
+            class="button"
+        >
+            + Add Client
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         SEARCH
+    ========================= -->
+
+    <form
+        method="GET"
+        action="/clients"
+        class="lead-filters"
+    >
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by name, email or phone..."
+            value="{{ search }}"
+        >
+
+        <button
+            type="submit"
+            class="button"
+        >
+            Search
+        </button>
+
+        <a
+            href="/clients"
+            class="button secondary"
+        >
+            Clear
+        </a>
+
+    </form>
+
+
+    <!-- =========================
+         CLIENT LIST
+    ========================= -->
+
+    {% if clients %}
+
+        <div class="client-list">
+
+            {% for client in clients %}
+
+                <div class="client-card">
+
+
+                    <div class="client-card-info">
+
+                        <h3>
+                            {{ client["client_name"] }}
+                        </h3>
+
+                        <p>
+                            {{ client["email"] }}
+                        </p>
+
+                        <p>
+                            {{ client["phone"] }}
+                        </p>
+
+                        {% if client["goal"] %}
+
+                            <p class="client-goal">
+                                Goal: {{ client["goal"] }}
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="client-card-actions">
+
+                        <a
+                            href="/client/{{ client['id'] }}"
+                            class="button"
+                        >
+                            View Profile
+                        </a>
+
+                        <a
+                            href="/edit-client/{{ client['id'] }}"
+                            class="button secondary"
+                        >
+                            Edit
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =========================
+             NO CLIENTS
+        ========================= -->
+
+        <div class="empty-state">
+
+            <h2>
+                No Clients Found
+            </h2>
+
+            {% if search %}
+
+                <p>
+                    No clients matched "{{ search }}".
+                </p>
+
+            {% else %}
+
+                <p>
+                    You don't have any clients yet.
+                </p>
+
+            {% endif %}
+
+            <a
+                href="/add-client"
+                class="button"
+            >
+                + Add Client
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+</main>
+
+</body>
+
+</html>

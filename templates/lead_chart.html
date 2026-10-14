@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lead Analytics - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">Dashboard</a>
+
+        <a href="/leads" class="active">Leads</a>
+
+        <a href="/clients">Clients</a>
+
+        <a href="/appointments">Appointments</a>
+
+        <a href="/analytics">Analytics</a>
+
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>Lead Analytics</h1>
+
+            <p>
+                Overview of your lead pipeline.
+            </p>
+
+        </div>
+
+        <a href="/leads" class="button secondary">
+            Back to Leads
+        </a>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Total Leads
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["total_leads"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                New
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["new_leads"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Contacted
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["contacted_leads"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Interested
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["interested_leads"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Converted
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["converted_leads"] }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-label">
+                Lost
+            </span>
+
+            <strong class="stat-value">
+                {{ analytics["lost_leads"] }}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-card profile-card-full">
+
+        <div class="profile-card-header">
+
+            <div>
+
+                <h2>Lead Pipeline</h2>
+
+                <p>
+                    Current number of leads at each stage.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-details">
+
+            <div class="profile-detail">
+
+                <span>New</span>
+
+                <strong>
+                    {{ analytics["new_leads"] }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <span>Contacted</span>
+
+                <strong>
+                    {{ analytics["contacted_leads"] }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <span>Interested</span>
+
+                <strong>
+                    {{ analytics["interested_leads"] }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <span>Converted</span>
+
+                <strong>
+                    {{ analytics["converted_leads"] }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-detail">
+
+                <span>Lost</span>
+
+                <strong>
+                    {{ analytics["lost_leads"] }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="profile-card profile-card-full">
+
+        <div class="profile-card-header">
+
+            <div>
+
+                <h2>Conversion Rate</h2>
+
+                <p>
+                    Percentage of leads converted into clients.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-notes">
+
+            <h1>
+                {{ analytics["conversion_rate"] }}%
+            </h1>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+</body>
+
+</html>

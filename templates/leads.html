@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Leads - CoachFlow</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CoachFlow
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/dashboard">
+            Dashboard
+        </a>
+
+        <a href="/leads" class="active">
+            Leads
+        </a>
+
+        <a href="/clients">
+            Clients
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<main class="container">
+
+    <!-- Page Header -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Leads
+            </h1>
+
+            <p>
+                Manage your potential customers and follow-ups.
+            </p>
+
+        </div>
+
+        <a
+            href="/add-lead"
+            class="button"
+        >
+            + Add Lead
+        </a>
+
+    </div>
+
+
+    <!-- Search and Filters -->
+
+    <form
+        method="GET"
+        action="/leads"
+        class="lead-filters"
+    >
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by name, email or phone..."
+            value="{{ search }}"
+        >
+
+
+        <select name="status">
+
+            <option value="">
+                All Statuses
+            </option>
+
+            <option
+                value="New"
+                {% if status == "New" %}selected{% endif %}
+            >
+                New
+            </option>
+
+            <option
+                value="Contacted"
+                {% if status == "Contacted" %}selected{% endif %}
+            >
+                Contacted
+            </option>
+
+            <option
+                value="Interested"
+                {% if status == "Interested" %}selected{% endif %}
+            >
+                Interested
+            </option>
+
+            <option
+                value="Converted"
+                {% if status == "Converted" %}selected{% endif %}
+            >
+                Converted
+            </option>
+
+            <option
+                value="Lost"
+                {% if status == "Lost" %}selected{% endif %}
+            >
+                Lost
+            </option>
+
+        </select>
+
+
+        <button
+            type="submit"
+            class="button"
+        >
+            Search
+        </button>
+
+
+        <a
+            href="/leads"
+            class="button secondary"
+        >
+            Clear
+        </a>
+
+    </form>
+
+
+    <!-- Lead List -->
+
+    {% if leads %}
+
+        <div class="professional-lead-list">
+
+            {% for lead in leads %}
+
+                <div class="professional-lead-card">
+
+
+                    <!-- Lead Main Information -->
+
+                    <div class="professional-lead-main">
+
+                        <div class="professional-lead-title">
+
+                            <h2>
+                                {{ lead["lead_name"] }}
+                            </h2>
+
+
+                            <div class="lead-badges">
+
+                                {% if lead["status"] == "New" %}
+
+                                    <span class="lead-status-badge status-new">
+                                        New
+                                    </span>
+
+                                {% elif lead["status"] == "Contacted" %}
+
+                                    <span class="lead-status-badge status-contacted">
+                                        Contacted
+                                    </span>
+
+                                {% elif lead["status"] == "Interested" %}
+
+                                    <span class="lead-status-badge status-interested">
+                                        Interested
+                                    </span>
+
+                                {% elif lead["status"] == "Converted" %}
+
+                                    <span class="lead-status-badge status-converted">
+                                        Converted
+                                    </span>
+
+                                {% elif lead["status"] == "Lost" %}
+
+                                    <span class="lead-status-badge status-lost">
+                                        Lost
+                                    </span>
+
+                                {% endif %}
+
+
+                                {% if lead["interest_level"] == "High" %}
+
+                                    <span class="interest-badge interest-high">
+                                        High Interest
+                                    </span>
+
+                                {% elif lead["interest_level"] == "Medium" %}
+
+                                    <span class="interest-badge interest-medium">
+                                        Medium Interest
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="interest-badge interest-low">
+                                        Low Interest
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="professional-lead-contact">
+
+                            <span>
+                                {{ lead["email"] }}
+                            </span>
+
+                            <span>
+                                {{ lead["phone"] }}
+                            </span>
+
+                        </div>
+
+
+                        {% if lead["source"] %}
+
+                            <div class="professional-lead-source">
+
+                                Source:
+                                <strong>
+                                    {{ lead["source"] }}
+                                </strong>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Follow-up Information -->
+
+                    <div class="professional-lead-followup">
+
+                        <div class="followup-label">
+                            Next Follow-up
+                        </div>
+
+
+                        {% if lead["next_follow_up"] %}
+
+
+                            {% if lead["next_follow_up"] < today %}
+
+                                <div class="followup-status overdue">
+
+                                    <span class="followup-status-dot"></span>
+
+                                    <div>
+
+                                        <strong>
+                                            Overdue
+                                        </strong>
+
+                                        <span>
+                                            {{ lead["next_follow_up"] }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                            {% elif lead["next_follow_up"] == today %}
+
+                                <div class="followup-status due-today">
+
+                                    <span class="followup-status-dot"></span>
+
+                                    <div>
+
+                                        <strong>
+                                            Due today
+                                        </strong>
+
+                                        <span>
+                                            {{ lead["next_follow_up"] }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="followup-status upcoming">
+
+                                    <span class="followup-status-dot"></span>
+
+                                    <div>
+
+                                        <strong>
+                                            Upcoming
+                                        </strong>
+
+                                        <span>
+                                            {{ lead["next_follow_up"] }}
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            <div class="followup-status no-followup">
+
+                                <span class="followup-status-dot"></span>
+
+                                <div>
+
+                                    <strong>
+                                        Not scheduled
+                                    </strong>
+
+                                    <span>
+                                        No follow-up date
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Actions -->
+
+                    <div class="professional-lead-actions">
+
+                        <a
+                            href="/lead/{{ lead['id'] }}"
+                            class="button"
+                        >
+                            View Profile
+                        </a>
+
+                        <a
+                            href="/edit-lead/{{ lead['id'] }}"
+                            class="button secondary"
+                        >
+                            Edit
+                        </a>
+
+                    </div>
+
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- Empty State -->
+
+        <div class="empty-state">
+
+            <h2>
+                No Leads Found
+            </h2>
+
+
+            {% if search or status %}
+
+                <p>
+                    No leads matched your current search or filter.
+                </p>
+
+                <a
+                    href="/leads"
+                    class="button secondary"
+                >
+                    Clear Filters
+                </a>
+
+            {% else %}
+
+                <p>
+                    You don't have any leads yet.
+                </p>
+
+                <a
+                    href="/add-lead"
+                    class="button"
+                >
+                    + Add Lead
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+
+</html>

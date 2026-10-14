@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients - CoachFlow</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">CoachFlow</div>
+
+    <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/leads">Leads</a>
+        <a href="/clients">Clients</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Clients</h1>
+            <p>Manage your current clients and their information.</p>
+        </div>
+
+        <a href="/add-client" class="button">
+            + Add Client
+        </a>
+
+    </div>
+
+    {% if clients %}
+
+        <div class="client-grid">
+
+            {% for client in clients %}
+
+                <div class="client-card">
+
+                    <div class="client-card-header">
+
+                        <div>
+                            <h2>{{ client['client_name'] }}</h2>
+                            <p>{{ client['email'] }}</p>
+                        </div>
+
+                    </div>
+
+                    <div class="profile-item">
+                        <span>Phone</span>
+                        <strong>{{ client['phone'] }}</strong>
+                    </div>
+
+                    <div class="profile-item">
+                        <span>Goal</span>
+                        <strong>{{ client['goal'] }}</strong>
+                    </div>
+
+                    <div class="client-card-actions">
+
+                        <a
+                            href="/client/{{ client['id'] }}"
+                            class="button"
+                        >
+                            View Client
+                        </a>
+
+                        <a
+                            href="/edit-client/{{ client['id'] }}"
+                            class="button secondary"
+                        >
+                            Edit
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <h2>No Clients Yet</h2>
+
+            <p>
+                You haven't added any clients yet. Add your first client
+                to start managing your business.
+            </p>
+
+            <a href="/add-client" class="button">
+                + Add Your First Client
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>
